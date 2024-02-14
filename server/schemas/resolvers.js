@@ -16,7 +16,7 @@ const resolvers = {
     },
 
     Mutation: {
-        login: async (parent, { email, password }) => {
+        userLogin: async (parent, { email, password }) => {
             const user = await User.findOne({ email });
       
             if (!user) {
@@ -32,14 +32,15 @@ const resolvers = {
             const token = signToken(user);
             return { token, user };
           },
-          addUser: async (parent, {username, email, password}) =>{
+        addUser: async (parent, {username, email, password}) =>{
             const user = User.create({username, email, password});
             const token = signToken(user);
             
             return { token, user }
           },
-          saveBook: async(parent, {bookId, authors, description, title, image, link}, context ) => {
+        saveBook: async(parent, {bookId, authors, description, title, image, link}, context ) => {
             if (context.user) {
+                console.log(args);
                 return User.findOneAndUpdate(
                     { _id: context.user._id },
                     { $addToSet: {
@@ -58,7 +59,7 @@ const resolvers = {
                     })
             }
           },
-          removeBook: async(parent, { bookId }, context) => {
+        removeBook: async(parent, { bookId }, context) => {
             if (context.user) {
                 return User.findOneAndUpdate(
                     { _id: context.user._id }, 
