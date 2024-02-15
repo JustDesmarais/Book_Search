@@ -10,11 +10,18 @@ const resolvers = {
             return User.findOne({ _id: userId });
         },
         me: async (parent, args, context) => {
-            if (context.user) {
-                return User.findOne({ _id: context.user._id })
+            try {
+              if (context.user) {
+                const currentUser = await User.findOne({ _id: context.user._id });
+                return currentUser
+              } else {
+                return AuthenticationError;
+              }
+            } catch (error) {
+                console.log(error);
             }
 
-            return AuthenticationError;
+            
         }
     },
 
@@ -36,7 +43,6 @@ const resolvers = {
             return { token, user };
           },
         addUser: async (parent, {username, email, password}) =>{
-            console.log(username);
             const user = User.create({username, email, password});
             const token = signToken(user);
             
@@ -63,12 +69,17 @@ const resolvers = {
             }
           },
         removeBook: async(parent, { bookId }, context) => {
-            if (context.user) {
-                return User.findOneAndUpdate(
-                    { _id: context.user._id }, 
-                    { $pull: {savedBooks: { bookId: bookId }}},
-                    { new: true }
-                )
+            try {
+                if (context.user) {
+                    const updatedUser = await User.findOneAndUpdate(
+                        { _id: context.user._id }, 
+                        { $pull: {savedBooks: { bookId: bookId }}},
+                        { new: true }
+                    );
+                    return updatedUser;
+                }
+            } catch (err) {
+                console.log(err)
             }
           },
     }
