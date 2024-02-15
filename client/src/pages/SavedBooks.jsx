@@ -8,20 +8,15 @@ import {
   Col
 } from 'react-bootstrap';
 
-import { getMe, deleteBook } from '../utils/API';
-import Auth from '../utils/auth';
+//import { getMe, deleteBook } from '../utils/API';
+//import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 import { REMOVE_BOOK } from '../utils/mutations';
 import { QUERY_ME } from '../utils/queries';
 
 const SavedBooks = () => {
   const [userData, setUserData] = useState({});
-  const [ removeBook, { error }] = useMutation(REMOVE_BOOK, {
-    refetchQueries: [
-      QUERY_ME,
-      'me'
-    ]
-  });
+  const [ removeBook, { error }] = useMutation(REMOVE_BOOK);
   const { loading, data } = useQuery(QUERY_ME);
 
   // use this to determine if `useEffect()` hook needs to run again
@@ -46,7 +41,6 @@ const SavedBooks = () => {
         }
 
         setUserData(data.me);
-        console.log(userData);
       } catch (err) {
         console.error(err);
       }
@@ -73,9 +67,8 @@ const SavedBooks = () => {
       //}
 
       //const updatedUser = await response.json();
-      // setUserData(data.removeBook.user);
+      setUserData(data.removeBook.user);
       // upon success, remove book's id from localStorage
-      //console.log(userData);
       removeBookId(bookId);
     } catch (err) {
       console.error(err);
