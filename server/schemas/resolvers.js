@@ -20,8 +20,6 @@ const resolvers = {
             } catch (error) {
                 console.log(error);
             }
-
-            
         }
     },
 
