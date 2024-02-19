@@ -80,9 +80,9 @@ const SavedBooks = () => {
       //}
 
       //const updatedUser = await response.json();
-      setUserData({ ...userData, bookCount: data.removeBook.bookCount, savedBooks: data.removeBook.savedBooks });
+      await setUserData({ ...userData, bookCount: data.removeBook.bookCount, savedBooks: data.removeBook.savedBooks });
       // upon success, remove book's id from localStorage
-      removeBookId(bookId);
+      await removeBookId(bookId);
     } catch (err) {
       console.error(err);
     }
